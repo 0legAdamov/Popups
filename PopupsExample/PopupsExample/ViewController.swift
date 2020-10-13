@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import Popups
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .systemBackground
+        
+        print(Popups().text)
     }
 
 
