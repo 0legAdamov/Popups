@@ -101,14 +101,14 @@ class PopupActionButton: UIView {
     private func updateStyle() {
         switch self.style {
         case .filled:
-            layer.shadowColor = PopupConfig.colors.buttonFill.cgColor
-            button.backgroundColor = PopupConfig.colors.buttonFill
+            //layer.shadowColor = PopupConfig.colors.buttonFill.cgColor
+            //button.backgroundColor = PopupConfig.colors.buttonFill
             button?.layer.borderWidth = 0
             
         case .bordered:
             layer.shadowColor = UIColor.clear.cgColor
             button?.backgroundColor = .clear
-            button?.layer.borderColor = PopupConfig.colors.buttonBorder.cgColor
+            //button?.layer.borderColor = PopupConfig.colors.buttonBorder.cgColor
             button?.layer.borderWidth = 2
             
         case .bordless:
@@ -126,7 +126,8 @@ class PopupActionButton: UIView {
         case .filled:
             button?.setTitleColor(PopupConfig.colors.background, for: .normal)
         case .bordered:
-            button?.setTitleColor(PopupConfig.colors.buttonBorder, for: .normal)
+            break
+            //button?.setTitleColor(PopupConfig.colors.buttonBorder, for: .normal)
         case .bordless:
             if self.destructive {
                 button?.setTitleColor(PopupConfig.colors.destructive, for: .normal)

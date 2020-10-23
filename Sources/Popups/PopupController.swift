@@ -23,7 +23,7 @@ public class PopupController: UIViewController {
     }()
     
     
-    init() {
+    public init() {
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .overFullScreen
         print("!! init", String(describing: type(of: self)))

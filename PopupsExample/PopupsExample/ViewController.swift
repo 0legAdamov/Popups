@@ -16,6 +16,21 @@ class ViewController: UIViewController {
         
     }
 
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.showAlert()
+        }
+    }
+    
+    
+    func showAlert() {
+        let alert = PopupAlert()
+        let vc = PopupController()
+        self.present(vc, animated: false)
+    }
 
 }
 
