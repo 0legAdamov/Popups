@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Popups
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,7 +18,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = ViewController()
         window?.makeKeyAndVisible()
+        
+        PopupConfig.setup(colors: ExampleColors())
+        
         return true
     }
 }
 
+
+class ExampleColors: PopupColors {
+    
+    var background: UIColor { return UIColor(named: "background")! }
+    
+    var separator: UIColor { return UIColor(named: "separator")! }
+    
+    var title: UIColor { return UIColor(named: "title")! }
+    
+    var subtitle: UIColor { return UIColor(named: "subtitle")! }
+    
+    var destructive: UIColor { return UIColor(named: "destructive")! }
+    
+    var buttonText: UIColor { return UIColor(named: "title")! }
+    
+    var textfieldIcon: UIColor { return UIColor(named: "title")! }
+    
+    var textfieldPlaceholder: UIColor { return UIColor(named: "textfield_placeholder")! }
+    
+    var textfieldText: UIColor { return UIColor(named: "title")! }
+}

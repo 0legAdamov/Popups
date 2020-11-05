@@ -4,7 +4,10 @@ class PopupView: UIView {
 
     var hideAction: (() -> Void)?
     
-    let contentInsets = UIEdgeInsets(top: 19, left: 30, bottom: 6, right: 30)
+    let xOffset: CGFloat = 24
+    let contentInsets = UIEdgeInsets(top: 15, left: 12, bottom: 0, right: 12)
+    let buttonHeight: CGFloat = 40
+    
 
     
     func makeTitle(text: String) -> UILabel {
@@ -24,13 +27,12 @@ class PopupView: UIView {
     }
     
     
-    func makeSubtitle(text: String, lastContentY: CGFloat) -> UILabel {
+    func makeSubtitle(text: String, y: CGFloat) -> UILabel {
         let availableSize = CGSize(width: self.bounds.width - contentInsets.left - contentInsets.right, height: 200)
         let attrText = NSAttributedString(string: text, attributes: [.font: PopupConfig.fonts.subtitle,
                                                                      .foregroundColor: PopupConfig.colors.subtitle])
         let height = ceil(attrText.boundingRect(with: availableSize, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height)
-        let y = lastContentY + 13
-        let frame = CGRect(x: contentInsets.left, y: y, width: availableSize.width, height: max(height, 26))
+        let frame = CGRect(x: contentInsets.left, y: y + 7, width: availableSize.width, height: max(height, 26))
         
         let label = UILabel(frame: frame)
         label.numberOfLines = 0
@@ -45,17 +47,17 @@ class PopupView: UIView {
         view.backgroundColor = PopupConfig.colors.separator
         return view
     }
-    
 }
+
 
 extension UIView {
     
     func applyPopupStyle() {
         backgroundColor = PopupConfig.colors.background
-        layer.cornerRadius = 12
-        layer.shadowOpacity = 0.3
+        layer.cornerRadius = 14
+        layer.shadowOpacity = 0.24
         layer.shadowColor = UIColor.black.cgColor
-        layer.shadowRadius = 7
-        layer.shadowOffset = CGSize(width: 0, height: 2)
+        layer.shadowRadius = 2
+        layer.shadowOffset = .zero
     }
 }

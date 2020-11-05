@@ -5,27 +5,28 @@ public class PopupController: UIViewController {
     
     public var onDismiss: (() -> Void)?
     
-    var isFirstAppearance: Bool {
+    private var appearanceCount: UInt = 0
+    private var animator: UIViewPropertyAnimator?
+    private let xPadding: CGFloat = 26
+    private let model: PopupModel
+    private var modelView: PopupView!
+    
+    private var isFirstAppearance: Bool {
         return appearanceCount <= 1
     }
-
-    var modalInteraction: Bool {
-        return false
-    }
     
-    private var appearanceCount: UInt = 0
-    
-    private lazy var darkView: UIView = {
-        let view = UIView(frame: self.view.bounds)
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+    private lazy var darkView: UIVisualEffectView = {
+        let view = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         view.alpha = 0
         return view
     }()
     
     
-    public init() {
+    public init(model: PopupModel) {
+        self.model = model
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .overFullScreen
+        
         print("!! init", String(describing: type(of: self)))
     }
     
@@ -43,11 +44,23 @@ public class PopupController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = .clear
-        self.view.addSubview(self.darkView)
+        view.backgroundColor = .clear
+        view.addSubview(darkView)
 
-        if !self.modalInteraction {
+        if !model.modalInteraction {
             appendOutsideGesture()
+        }
+        
+        if let alert = model as? PopupAlert {
+            modelView = PopupAlertView(model: alert, inWidth: view.bounds.width - 2 * xPadding)
+            modelView.center = CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2)
+            modelView.alpha = 0
+            view.addSubview(modelView)
+            modelView.hideAction = { [weak self] in
+                self?.hideAnimated()
+            }
+        } else {
+            assert(false)
         }
     }
     
@@ -60,7 +73,7 @@ public class PopupController: UIViewController {
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        guard self.isFirstAppearance else { return }
+        guard isFirstAppearance else { return }
         showAnimated()
     }
     
@@ -71,20 +84,34 @@ public class PopupController: UIViewController {
     
     
     func showAnimated() {
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+        if let animator = self.animator, animator.state != .inactive { return }
+        
+        self.modelView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        self.animator = UIViewPropertyAnimator(duration: 0.4, dampingRatio: 0.6) {
             self.darkView.alpha = 1
-        }, completion: nil)
+            self.modelView.alpha = 1
+            self.modelView.transform = .identity
+        }
+        self.animator?.startAnimation()
     }
     
     
     func hideAnimated() {
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+        if let animator = self.animator, animator.state != .inactive {
+            animator.stopAnimation(true)
+        }
+        
+        self.animator = UIViewPropertyAnimator(duration: 0.4, dampingRatio: 0.8) {
+            self.modelView.alpha = 0
+            self.modelView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
             self.darkView.alpha = 0
-        }) { _ in
-            self.dismiss(animated: false, completion: { [weak self] in
-                self?.onDismiss?()
+        }
+        self.animator?.addCompletion { _ in
+            self.dismiss(animated: false, completion: {
+                self.onDismiss?()
             })
         }
+        self.animator?.startAnimation()
     }
 
 

@@ -11,6 +11,7 @@
 		D4493FBE25365017006E30FE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4493FBD25365017006E30FE /* ViewController.swift */; };
 		D4493FC325365018006E30FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4493FC225365018006E30FE /* Assets.xcassets */; };
 		D4493FC625365018006E30FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4493FC425365018006E30FE /* LaunchScreen.storyboard */; };
+		D47F43A82542DFB300F8C0E4 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47F43A72542DFB300F8C0E4 /* TableViewCell.swift */; };
 		D4E07A3925365EDE0012D1F8 /* Popups in Frameworks */ = {isa = PBXBuildFile; productRef = D4E07A3825365EDE0012D1F8 /* Popups */; };
 /* End PBXBuildFile section */
 
@@ -21,6 +22,7 @@
 		D4493FC225365018006E30FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D4493FC525365018006E30FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D4493FC725365018006E30FE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D47F43A72542DFB300F8C0E4 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		D4E07A3325365E9E0012D1F8 /* .. */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,6 +64,7 @@
 				D4493FC225365018006E30FE /* Assets.xcassets */,
 				D4493FC425365018006E30FE /* LaunchScreen.storyboard */,
 				D4493FC725365018006E30FE /* Info.plist */,
+				D47F43A72542DFB300F8C0E4 /* TableViewCell.swift */,
 			);
 			path = PopupsExample;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D47F43A82542DFB300F8C0E4 /* TableViewCell.swift in Sources */,
 				D4493FBE25365017006E30FE /* ViewController.swift in Sources */,
 				D4493FBA25365017006E30FE /* AppDelegate.swift in Sources */,
 			);

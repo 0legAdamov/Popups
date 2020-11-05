@@ -1,15 +1,6 @@
 import UIKit
 
 
-// how to use
-//class ExampleColors: PopupColors {
-//    override var background: UIColor {
-//        .red
-//    }
-//}
-//PopupConfig.setup(colors: ExampleColors())
-
-
 public class PopupConfig {
     
     public class var colors: PopupColors {
@@ -40,54 +31,90 @@ public class PopupConfig {
     
     private static let shared = PopupConfig()
     
-    private init() {}
+    private var colors: PopupColors = PopupColorsDefault()
+    private var fonts: PopupFonts = PopupFontsDefault()
+    private var layout: PopupLayout = PopupLayoutDefault()
+}
+
+
+public protocol PopupFonts {
     
-    private var colors = PopupColors()
-    private var fonts  = PopupFonts()
-    private var layout = PopupLayout()
-}
-
-
-public class PopupLayout {
-}
-
-
-public class PopupColors {
-    /// Default: systemBackground
-    public var background: UIColor { .systemBackground }
-    /// Default: systemGray4
-    public var separator: UIColor { .systemGray4 }
-    /// Default: darkText
-    public var title: UIColor { .darkText }
-    /// Default: lightText
-    public var subtitle: UIColor { .lightText }
-    /// Default: systemRed
-    public var destructive: UIColor { .systemRed }
-    /// Default: darkText
-    public var buttonText: UIColor { .darkText }
-    /// Default: lightGray
-    public var buttonHighlighted: UIColor { .lightGray }
-    /// Default: darkText
-    public var textfieldIcon: UIColor { .darkText }
-    /// Default: lightGray
-    public var textfieldPlaceholder: UIColor { .lightGray }
-    /// Default: darkText
-    public var textfieldText: UIColor { .darkText }
-}
-
-
-public class PopupFonts {
-    /// Default: system semibold 16
-    public var title: UIFont { .systemFont(ofSize: 16, weight: .semibold) }
-    /// Default: system regular 14
-    public var subtitle: UIFont { .systemFont(ofSize: 14, weight: .regular) }
-    /// Default: system regular 14
-    public var button: UIFont { .systemFont(ofSize: 14, weight: .regular) }
-    /// Default: system medium 14
-    public var buttonBold: UIFont { .systemFont(ofSize: 14, weight: .medium) }
-    ///Default: system medium 15
-    public var textfield: UIFont { .systemFont(ofSize: 15, weight: .medium) }
-    /// Default: system italic 16
-    public var textfieldPlaceholder: UIFont { .italicSystemFont(ofSize: 15) }
+    var title: UIFont { get }
     
+    var subtitle: UIFont { get }
+    
+    var button: UIFont { get }
+    
+    var buttonBold: UIFont { get }
+    
+    var textfield: UIFont { get }
+    
+    var textfieldPlaceholder: UIFont { get }
+}
+
+
+public protocol PopupColors {
+    
+    var background: UIColor { get }
+    
+    var separator: UIColor { get }
+    
+    var title: UIColor { get }
+    
+    var subtitle: UIColor { get }
+    
+    var destructive: UIColor { get }
+    
+    var buttonText: UIColor { get }
+    
+    var textfieldIcon: UIColor { get }
+    
+    var textfieldPlaceholder: UIColor { get }
+    
+    var textfieldText: UIColor { get }
+}
+
+
+public protocol PopupLayout {}
+
+
+private class PopupColorsDefault: PopupColors {
+    
+    var background: UIColor { .systemBackground }
+    
+    var separator: UIColor { .systemGray6 }
+    
+    var title: UIColor { .darkText }
+    
+    var subtitle: UIColor { .lightText }
+    
+    var destructive: UIColor { .systemRed }
+    
+    var buttonText: UIColor { .darkText }
+    
+    var textfieldIcon: UIColor { .darkText }
+    
+    var textfieldPlaceholder: UIColor { .lightGray }
+    
+    var textfieldText: UIColor { .darkText }
+}
+
+
+private class PopupFontsDefault: PopupFonts {
+    
+    var title: UIFont { .systemFont(ofSize: 17, weight: .semibold) }
+    
+    var subtitle: UIFont { .systemFont(ofSize: 16, weight: .regular) }
+    
+    var button: UIFont { .systemFont(ofSize: 16, weight: .regular) }
+    
+    var buttonBold: UIFont { .systemFont(ofSize: 16, weight: .medium) }
+    
+    var textfield: UIFont { .systemFont(ofSize: 16, weight: .medium) }
+    
+    var textfieldPlaceholder: UIFont { .italicSystemFont(ofSize: 16) }
+}
+
+
+private class PopupLayoutDefault: PopupLayout {
 }
