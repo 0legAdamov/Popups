@@ -1,19 +1,27 @@
 import UIKit
-
+import RxSwift
 
 // MARK: Buttons
 
 public class PopupButton {
     
-    let title: String
     public var boldTitle = false
     public var destructive = false
-    public var action: (() -> Void)?
+    public lazy var onAction: Observable<Void> = {
+        return actionSubject.asObservable()
+    }()
+    
+    let title: String
+    let actionSubject = PublishSubject<Void>()
     
     
-    public init(title: String, action: (() -> Void)? = nil) {
+    public init(title: String) {
         self.title = title
-        self.action = action
+    }
+    
+    deinit {
+        actionSubject.onCompleted()
+        print("!! deinit", String(describing: type(of: self)))
     }
 }
 

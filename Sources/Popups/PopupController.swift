@@ -1,9 +1,15 @@
 import UIKit
+import RxSwift
+import RxCocoa
 
 
 public class PopupController: UIViewController {
     
-    public var onDismiss: (() -> Void)?
+    public lazy var onDismiss: Observable<Void> = {
+        return dismissSubject.asObservable()
+    }()
+    
+    private let dismissSubject = PublishSubject<Void>()
     
     private var appearanceCount: UInt = 0
     private var animator: UIViewPropertyAnimator?
@@ -37,6 +43,7 @@ public class PopupController: UIViewController {
     
     
     deinit {
+        dismissSubject.onCompleted()
         print("!! deinit", String(describing: type(of: self)))
     }
     
@@ -74,6 +81,8 @@ public class PopupController: UIViewController {
         super.viewDidAppear(animated)
         
         guard isFirstAppearance else { return }
+        assert(model.isValid)
+        
         showAnimated()
     }
     
@@ -108,7 +117,8 @@ public class PopupController: UIViewController {
         }
         self.animator?.addCompletion { _ in
             self.dismiss(animated: false, completion: {
-                self.onDismiss?()
+                self.dismissSubject.onNext(())
+                self.dismissSubject.onCompleted()
             })
         }
         self.animator?.startAnimation()

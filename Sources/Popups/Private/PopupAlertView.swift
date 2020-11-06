@@ -110,7 +110,7 @@ class PopupAlertView: PopupView {
         bFrames.append(CGRect(x: contentInsets.left, y: lastY, width: btnWidth, height: PopupButtonView.preferredHeight))
         bFrames.append(CGRect(x: bounds.width - contentInsets.right - btnWidth, y: lastY, width: btnWidth, height: PopupButtonView.preferredHeight))
         
-        return (bFrames, [vlFrame])
+        return (bFrames, lFrames)
     }
     
     
@@ -163,6 +163,8 @@ class PopupAlertView: PopupView {
     
     @objc private func buttonAction(_ sender: PopupButtonView) {
         hideAction?()
-        alertModel.buttons[sender.tag].action?()
+        let model = alertModel.buttons[sender.tag]
+        model.actionSubject.onNext(())
+        model.actionSubject.onCompleted()
     }
 }
