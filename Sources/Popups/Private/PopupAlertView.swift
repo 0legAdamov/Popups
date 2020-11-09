@@ -37,17 +37,17 @@ class PopupAlertView: PopupView {
             var textfieldX = contentInsets.left
             
             if let icon = textFieldModel.image {
-                let iconView = makeTextFieldIcon(image: icon, y: lastY + 7)
+                let iconView = makeTextFieldIcon(image: icon, y: lastY + 20)
                 textfieldX = iconView.frame.maxX + 7
                 addSubview(iconView)
             }
             
-            textField = makeTextField(model: textFieldModel, x: textfieldX, y: lastY + 7)
+            textField = makeTextField(model: textFieldModel, x: textfieldX, y: lastY + 20)
             lastY = textField!.frame.maxY
             addSubview(textField!)
         }
         
-        lastY = textField != nil ? lastY + 13 : lastY + 23
+        lastY = textField != nil ? lastY + 20 : lastY + 23
         
         var frames: ButtonAndLinesFrames = ([CGRect](), [CGRect]())
         let maxBtnWidth = model.buttons.map { PopupButtonView.width(for: $0) }.max()!
@@ -133,6 +133,8 @@ class PopupAlertView: PopupView {
             textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.font: PopupConfig.fonts.textfield, .foregroundColor: PopupConfig.colors.textfieldPlaceholder])
         }
         textField.borderStyle = .none
+//        textField.returnKeyType = .done
+//        textField.delegate = self
         //.. handle text
         /*textField.rx.text
             .subscribe(onNext: { [weak model] text in
@@ -166,5 +168,15 @@ class PopupAlertView: PopupView {
         let model = alertModel.buttons[sender.tag]
         model.actionSubject.onNext(())
         model.actionSubject.onCompleted()
+    }
+}
+
+
+extension PopupAlertView: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let canReturn = !(textField.text ?? "").isEmpty
+        print("!! should", canReturn)
+        return canReturn
     }
 }

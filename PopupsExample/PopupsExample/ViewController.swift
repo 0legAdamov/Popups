@@ -44,73 +44,98 @@ class ViewController: UIViewController {
         
         alerts.append(Example(text: "No description", action: { [unowned self] in
             let alert = PopupAlert(title: "Alert without description")
-            let vc = PopupController(model: alert)
             
             let done = PopupAlertButton(title: "Done")
             done.onAction
-                .subscribe { _ in
+                .subscribe(onNext: { _ in
                     print("btn: next")
-                }
+                })
                 .disposed(by: disposeBag)
-            alert.buttons.append(done)
+            alert.append(button: done)
             
-            Observable.combineLatest([done.onAction, vc.onDismiss])
+            Observable.combineLatest([done.onAction, alert.onDismiss])
                 .ignoreElements()
                 .subscribe(onCompleted: {
                     print("On Complete")
                 })
                 .disposed(by: disposeBag)
             
-            self.present(vc, animated: false)
+            alert.show(on: self)
         }))
         
         alerts.append(Example(text: "With Description", action: { [unowned self] in
-            let alert = PopupAlert(title: "Alert with description", subtitle: "Some example description for alert view demo in two strings")
+            let alert = PopupAlert(title: "Modal Alert", subtitle: "Alert modal interaction. Some example description for alert view demo in two strings")
+            alert.modalInteraction = true
+            
             let done = PopupAlertButton(title: "Done")
-            alert.buttons.append(done)
-            let vc = PopupController(model: alert)
-            self.present(vc, animated: false)
+            alert.append(button: done)
+            
+            alert.show(on: self)
         }))
         
         alerts.append(Example(text: "Two actions", action: { [unowned self] in
             let alert = PopupAlert(title: "Alert without description")
-            let vc = PopupController(model: alert)
             
             let done = PopupAlertButton(title: "Remove")
             done.destructive = true
-            alert.buttons.append(done)
+            alert.append(button: done)
             
             let cancel = PopupAlertButton(title: "Cancel")
             cancel.boldTitle = true
-            alert.buttons.append(cancel)
+            alert.append(button: cancel)
             
-            self.present(vc, animated: false)
+            alert.show(on: self)
         }))
         
         alerts.append(Example(text: "Three actions", action: { [unowned self] in
             let alert = PopupAlert(title: "Alert without description")
-            let vc = PopupController(model: alert)
             
             let action = PopupAlertButton(title: "Action")
-            alert.buttons.append(action)
+            alert.append(button: action)
             
             let remove = PopupAlertButton(title: "Remove")
             remove.destructive = true
-            alert.buttons.append(remove)
+            alert.append(button: remove)
             
             let cancel = PopupAlertButton(title: "Cancel")
             cancel.boldTitle = true
-            alert.buttons.append(cancel)
+            alert.append(button: cancel)
             
-            Observable.combineLatest([action.onAction, remove.onAction, cancel.onAction, vc.onDismiss])
+            Observable.combineLatest([action.onAction, remove.onAction, cancel.onAction, alert.onDismiss])
                 .ignoreElements()
                 .subscribe(onCompleted: {
                     print("On Complete")
                 })
                 .disposed(by: disposeBag)
             
-            self.present(vc, animated: false)
+            alert.show(on: self)
         }))
+        
+        alerts.append(Example(text: "Alert with textfield", action: { [unowned self] in
+            let alert = PopupAlert(title: "Alert with textfield", subtitle: "Whether the button is enabled depends on whether there is text in the textfield")
+            alert.textField = PopupAlertTextField(placeholder: "Input here...", text: nil, image: nil)
+            
+            let cancel = PopupButton(title: "Cancel")
+            cancel.boldTitle = true
+            alert.append(button: cancel)
+            
+            let apply = PopupAlertButton(title: "Apply")
+            apply.textFieldTracking = true
+            alert.append(button: apply)
+            
+            alert.onDismiss
+                .ignoreElements()
+                .subscribe(onCompleted: {
+                    print("on completed")
+                }, onDisposed: {
+                    print("on disposed")
+                })
+                .disposed(by: disposeBag)
+            
+            alert.show(on: self)
+        }))
+        
+        // action sheets
         
         actions.append(Example(text: "No actions, no description", action: { //[weak self] in
         }))
