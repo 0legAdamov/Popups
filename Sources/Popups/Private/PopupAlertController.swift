@@ -30,7 +30,7 @@ class PopupAlertController: PopupController {
         
         assert(alertModel.isValid)
         
-        alertView = PopupAlertView(model: alertModel, inWidth: view.bounds.width - 2 * xPadding)
+        alertView = PopupAlertView(model: alertModel, inWidth: min(view.bounds.width, view.bounds.height) - 2 * xPadding)
         alertView.alpha = 0
         alertView.center = CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2)
         alertView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
@@ -99,14 +99,4 @@ class PopupAlertController: PopupController {
         }
         animator?.startAnimation()
     }
-    
-    
-    //MARK: - Keyboard
-    
-//    @objc private func willShowKeyboard(_ notification: Notification) {
-//        guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-//        let keyboardHeight = frame.cgRectValue.height
-//        lastKeyboardHeight = keyboardHeight
-//        view.setNeedsLayout()
-//    }
 }
