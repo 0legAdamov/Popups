@@ -1,4 +1,20 @@
 import UIKit
+import RxCocoa
+import RxSwift
+
+
+extension Reactive where Base: PopupButtonView {
+    
+    var enabled: Binder<Bool> {
+        return Binder(self.base) { button, enabled in
+            button.enabled = enabled
+        }
+    }
+    
+    var tap: ControlEvent<Void> {
+        return self.base.button.rx.tap
+    }
+}
 
 
 class PopupButtonView: UIView {
@@ -6,6 +22,10 @@ class PopupButtonView: UIView {
     static let preferredHeight: CGFloat = 46
     
     fileprivate var button: UIButton!
+    
+    var enabled: Bool = true {
+        didSet { button?.isEnabled = enabled }
+    }
     
     
     class func width(for button: PopupButton) -> CGFloat {

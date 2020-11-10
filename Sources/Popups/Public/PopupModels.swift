@@ -121,7 +121,7 @@ public final class PopupAlert: PopupModel {
     
     
     override func makeController() -> PopupController {
-        return textField != nil ? PopupAlertTextfieldController(model: self) : PopupAlertController(model: self)
+        return PopupAlertController(model: self)
     }
 }
 

@@ -1,4 +1,6 @@
 import UIKit
+import RxCocoa
+import RxSwift
 
 
 typealias ButtonAndLinesFrames = (buttons: [CGRect], separators: [CGRect])
@@ -10,6 +12,7 @@ class PopupAlertView: PopupView {
     
     private let alertModel: PopupAlert
     private(set) var textField: UITextField?
+    private let disposeBag = DisposeBag()
     
     
     init(model: PopupAlert, inWidth width: CGFloat) {
@@ -133,14 +136,13 @@ class PopupAlertView: PopupView {
             textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.font: PopupConfig.fonts.textfield, .foregroundColor: PopupConfig.colors.textfieldPlaceholder])
         }
         textField.borderStyle = .none
-//        textField.returnKeyType = .done
-//        textField.delegate = self
-        //.. handle text
-        /*textField.rx.text
+        
+        // handle text
+        textField.rx.text
             .subscribe(onNext: { [weak model] text in
                 model?.text = text
             }).disposed(by: disposeBag)
-        */
+        
         return textField
     }
     
@@ -149,34 +151,22 @@ class PopupAlertView: PopupView {
         let buttonModel = alertModel.buttons[index]
         let button = PopupButtonView(frame: frame, model: buttonModel, index: index)
         
-        /*if buttonModel.textFieldTracking, let textfield = self.textField {
+        if let textfield = self.textField, let alertButton = buttonModel as? PopupAlertButton, alertButton.textFieldTracking {
             textfield.rx.text
                 .map { !($0?.isEmpty ?? true) }
                 .distinctUntilChanged()
                 .bind(to: button.rx.enabled)
                 .disposed(by: disposeBag)
-        }*/
-        //.. track button enable
+        }
         
-        button.addTarget(target: self, action: #selector(buttonAction(_:)))
+        button.rx.tap
+            .subscribe { [weak self] _ in
+                self?.hideAction?()
+                guard let model = self?.alertModel.buttons[index] else { return }
+                model.actionSubject.onNext(())
+                model.actionSubject.onCompleted()
+            }.disposed(by: disposeBag)
+
         return button
-    }
-    
-    
-    @objc private func buttonAction(_ sender: PopupButtonView) {
-        hideAction?()
-        let model = alertModel.buttons[sender.tag]
-        model.actionSubject.onNext(())
-        model.actionSubject.onCompleted()
-    }
-}
-
-
-extension PopupAlertView: UITextFieldDelegate {
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        let canReturn = !(textField.text ?? "").isEmpty
-        print("!! should", canReturn)
-        return canReturn
     }
 }

@@ -135,6 +135,30 @@ class ViewController: UIViewController {
             alert.show(on: self)
         }))
         
+        alerts.append(Example(text: "Alert with textfield and icon", action: { [unowned self] in
+            let alert = PopupAlert(title: "Alert with textfield", subtitle: "Whether the button is enabled depends on whether there is text in the textfield")
+            alert.textField = PopupAlertTextField(placeholder: "Input here...", text: nil, image: nil)
+            
+            let cancel = PopupButton(title: "Cancel")
+            cancel.boldTitle = true
+            alert.append(button: cancel)
+            
+            let apply = PopupAlertButton(title: "Apply")
+            apply.textFieldTracking = true
+            alert.append(button: apply)
+            
+            alert.onDismiss
+                .ignoreElements()
+                .subscribe(onCompleted: {
+                    print("on completed")
+                }, onDisposed: {
+                    print("on disposed")
+                })
+                .disposed(by: disposeBag)
+            
+            alert.show(on: self)
+        }))
+        
         // action sheets
         
         actions.append(Example(text: "No actions, no description", action: { //[weak self] in
