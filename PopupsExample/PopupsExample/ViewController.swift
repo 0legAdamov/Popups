@@ -121,6 +121,9 @@ class ViewController: UIViewController {
             
             let apply = PopupAlertButton(title: "Apply")
             apply.textFieldTracking = true
+            apply.trackingRule = { text in
+                return !(text ?? "").isEmpty
+            }
             alert.append(button: apply)
             
             alert.onDismiss

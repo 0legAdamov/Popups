@@ -153,7 +153,9 @@ class PopupAlertView: PopupView {
         
         if let textfield = self.textField, let alertButton = buttonModel as? PopupAlertButton, alertButton.textFieldTracking {
             textfield.rx.text
-                .map { !($0?.isEmpty ?? true) }
+                .map {
+                    alertButton.trackingRule?($0) ?? true
+                }
                 .distinctUntilChanged()
                 .bind(to: button.rx.enabled)
                 .disposed(by: disposeBag)

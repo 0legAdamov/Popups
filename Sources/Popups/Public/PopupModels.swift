@@ -33,6 +33,9 @@ public class PopupButton {
 public final class PopupAlertButton: PopupButton {
     
     public var textFieldTracking = false
+    
+    /// True if `text` is valid
+    public var trackingRule: ((_ text: String?) -> Bool)?
 }
 
 
