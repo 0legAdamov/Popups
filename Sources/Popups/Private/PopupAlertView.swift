@@ -3,20 +3,19 @@ import RxCocoa
 import RxSwift
 
 
-typealias ButtonAndLinesFrames = (buttons: [CGRect], separators: [CGRect])
-
-
 class PopupAlertView: PopupView {
     
     private let textFieldHeight: CGFloat = 21
     
-    private let alertModel: PopupAlert
+    private let model: PopupAlert
+    
     private(set) var textField: UITextField?
+    
     private let disposeBag = DisposeBag()
     
     
     init(model: PopupAlert, inWidth width: CGFloat) {
-        self.alertModel = model
+        self.model = model
         let frame = CGRect(x: 0, y: 0, width: width, height: 0)
         super.init(frame: frame)
         
@@ -56,7 +55,7 @@ class PopupAlertView: PopupView {
         let maxBtnWidth = model.buttons.map { PopupButtonView.width(for: $0) }.max()!
         let availableWidth = bounds.width - contentInsets.left - contentInsets.right
         let verticalLayout = availableWidth < maxBtnWidth || model.buttons.count != 2
-        frames = verticalLayout ? framesWithVerticalLayout(y: lastY) : framesWithHorizontalLayout(y: lastY)
+        frames = verticalLayout ? framesWithVerticalLayout(y: lastY, count: model.buttons.count) : framesWithHorizontalLayout(y: lastY)
         
         frames.separators.forEach {
             addSubview(makeLine(frame: $0))
@@ -72,27 +71,6 @@ class PopupAlertView: PopupView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    private func framesWithVerticalLayout(y: CGFloat) -> ButtonAndLinesFrames {
-        var bFrames = [CGRect]()
-        var lFrames = [CGRect]()
-        var lastY = y
-        
-        for _ in 0..<alertModel.buttons.count {
-            let lWidth = bounds.width - contentInsets.left - contentInsets.right
-            let lFrame = CGRect(x: contentInsets.left, y: lastY, width: lWidth, height: 1)
-            lastY += 1
-            lFrames.append(lFrame)
-            
-            let bSize = CGSize(width: bounds.width - contentInsets.left - contentInsets.right, height: PopupButtonView.preferredHeight)
-            let bFrame = CGRect(x: contentInsets.left, y: lastY , width: bSize.width, height: bSize.height)
-            lastY = bFrame.maxY
-            bFrames.append(bFrame)
-        }
-        
-        return (bFrames, lFrames)
     }
     
     
@@ -148,7 +126,7 @@ class PopupAlertView: PopupView {
     
     
     private func makeButton(index: Int, frame: CGRect) -> PopupButtonView {
-        let buttonModel = alertModel.buttons[index]
+        let buttonModel = model.buttons[index]
         let button = PopupButtonView(frame: frame, model: buttonModel, index: index)
         
         if let textfield = self.textField, let alertButton = buttonModel as? PopupAlertButton, alertButton.textFieldTracking {
@@ -164,7 +142,7 @@ class PopupAlertView: PopupView {
         button.rx.tap
             .subscribe { [weak self] _ in
                 self?.hideAction?()
-                guard let model = self?.alertModel.buttons[index] else { return }
+                guard let model = self?.model.buttons[index] else { return }
                 model.actionSubject.onNext(())
                 model.actionSubject.onCompleted()
             }.disposed(by: disposeBag)

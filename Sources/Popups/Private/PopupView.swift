@@ -1,5 +1,9 @@
 import UIKit
 
+
+typealias ButtonAndLinesFrames = (buttons: [CGRect], separators: [CGRect])
+
+
 class PopupView: UIView {
 
     var hideAction: (() -> Void)?
@@ -46,6 +50,27 @@ class PopupView: UIView {
         let view = UIView(frame: frame)
         view.backgroundColor = PopupConfig.colors.separator
         return view
+    }
+    
+    
+    func framesWithVerticalLayout(y: CGFloat, count: Int) -> ButtonAndLinesFrames {
+        var bFrames = [CGRect]()
+        var lFrames = [CGRect]()
+        var lastY = y
+        
+        for _ in 0..<count {
+            let lWidth = bounds.width - contentInsets.left - contentInsets.right
+            let lFrame = CGRect(x: contentInsets.left, y: lastY, width: lWidth, height: 1)
+            lastY += 1
+            lFrames.append(lFrame)
+            
+            let bSize = CGSize(width: bounds.width - contentInsets.left - contentInsets.right, height: PopupButtonView.preferredHeight)
+            let bFrame = CGRect(x: contentInsets.left, y: lastY , width: bSize.width, height: bSize.height)
+            lastY = bFrame.maxY
+            bFrames.append(bFrame)
+        }
+        
+        return (bFrames, lFrames)
     }
 }
 

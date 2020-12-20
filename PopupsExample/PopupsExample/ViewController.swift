@@ -56,7 +56,7 @@ class ViewController: UIViewController {
             Observable.combineLatest([done.onAction, alert.onDismiss])
                 .ignoreElements()
                 .subscribe(onCompleted: {
-                    print("On Complete")
+                    print("Complete and Hide")
                 })
                 .disposed(by: disposeBag)
             
@@ -104,7 +104,7 @@ class ViewController: UIViewController {
             Observable.combineLatest([action.onAction, remove.onAction, cancel.onAction, alert.onDismiss])
                 .ignoreElements()
                 .subscribe(onCompleted: {
-                    print("On Complete")
+                    print("Complete adn Hide")
                 })
                 .disposed(by: disposeBag)
             
@@ -140,7 +140,7 @@ class ViewController: UIViewController {
         
         alerts.append(Example(text: "Alert with textfield and icon", action: { [unowned self] in
             let alert = PopupAlert(title: "Alert with textfield", subtitle: "Whether the button is enabled depends on whether there is text in the textfield")
-            alert.textField = PopupAlertTextField(placeholder: "Input here...", text: nil, image: nil)
+            alert.textField = PopupAlertTextField(placeholder: "Input here...", text: nil, image: UIImage(systemName: "person.crop.circle"))
             
             let cancel = PopupButton(title: "Cancel")
             cancel.boldTitle = true
@@ -164,9 +164,90 @@ class ViewController: UIViewController {
         
         // action sheets
         
-        actions.append(Example(text: "No actions, no description", action: { //[weak self] in
+        actions.append(Example(text: "No actions, no description", action: { [unowned self] in
+            let actionSheet = PopupActionSheet(title: "No actions, no description", cancelButtonTitle: "Cancel")
+            
+            actionSheet.onDismiss
+                .ignoreElements()
+                .subscribe(onCompleted: {
+                    print("on completed")
+                })
+                .disposed(by: disposeBag)
+            
+            actionSheet.show(on: self)
         }))
-        actions.append(Example(text: "No actions, with description", action: { //[weak self] in
+        
+        actions.append(Example(text: "No actions, with description", action: { [unowned self] in
+            let actionSheet = PopupActionSheet(title: "No actions", subtitle: "Some long description of action sheet view", cancelButtonTitle: "Cancel")
+            
+            actionSheet.onDismiss
+                .ignoreElements()
+                .subscribe(onCompleted: {
+                    print("Hide")
+                })
+                .disposed(by: disposeBag)
+            
+            Observable.combineLatest([actionSheet.onCancel, actionSheet.onDismiss])
+                .ignoreElements()
+                .subscribe(onCompleted: {
+                    print("Cancel and Hide")
+                })
+                .disposed(by: disposeBag)
+            
+            actionSheet.show(on: self)
+        }))
+        
+        actions.append(Example(text: "One action", action: { [unowned self] in
+            let actionSheet = PopupActionSheet(title: "Some Title", subtitle: "Some long description of action sheet view", cancelButtonTitle: "Cancel")
+            
+            let action = PopupButton(title: "Some Action")
+            actionSheet.append(button: action)
+            
+            action.onAction
+                .subscribe(onNext: { _ in
+                    print("btn: next")
+                })
+                .disposed(by: disposeBag)
+            
+            Observable.combineLatest([action.onAction, actionSheet.onDismiss])
+                .ignoreElements()
+                .subscribe(onCompleted: {
+                    print("Action and Hide")
+                })
+                .disposed(by: disposeBag)
+            
+            actionSheet.show(on: self)
+        }))
+        
+        actions.append(Example(text: "Three actions", action: { [unowned self] in
+            let actionSheet = PopupActionSheet(title: "Some Title", cancelButtonTitle: "Cancel")
+            
+            let action1 = PopupButton(title: "First Action")
+            actionSheet.append(button: action1)
+            action1.onAction
+                .subscribe(onNext: { _ in
+                    print("btn 1: next")
+                })
+                .disposed(by: disposeBag)
+            
+            let action2 = PopupButton(title: "Delete Action")
+            action2.destructive = true
+            actionSheet.append(button: action2)
+            action2.onAction
+                .subscribe(onNext: { _ in
+                    print("btn 2: next")
+                })
+                .disposed(by: disposeBag)
+            
+            let action3 = PopupButton(title: "Third Action")
+            actionSheet.append(button: action3)
+            action3.onAction
+                .subscribe(onNext: { _ in
+                    print("btn 3: next")
+                })
+                .disposed(by: disposeBag)
+            
+            actionSheet.show(on: self)
         }))
     }
     

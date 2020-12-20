@@ -34,9 +34,11 @@ class PopupAlertController: PopupController {
         
         assert(alertModel.isValid)
         
-        alertView = PopupAlertView(model: alertModel, inWidth: min(view.bounds.width, view.bounds.height) - 2 * xPadding)
+        var maxWidth = min(view.bounds.width, view.bounds.height) - 2 * xPadding
+        maxWidth = min(500, maxWidth)
+        alertView = PopupAlertView(model: alertModel, inWidth: maxWidth)
         alertView.alpha = 0
-        alertView.center = CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2)
+        alertView.center = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
         alertView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         view.addSubview(alertView)
         
@@ -114,10 +116,10 @@ class PopupAlertController: PopupController {
             }
         }
         animator?.addCompletion { _ in
-            self.dismiss(animated: false, completion: {
+            self.dismiss(animated: false) {
                 self.alertModel.dismissSubject.onNext(())
                 self.alertModel.dismissSubject.onCompleted()
-            })
+            }
         }
         animator?.startAnimation()
     }

@@ -77,6 +77,12 @@ public class PopupModel {
     var buttons = [PopupButton]()
     
     var isValid: Bool {
+        if title == nil && subtitle == nil {
+            print("\(String(describing: self.self)): need provide title or subtitle")
+        }
+        if buttons.isEmpty {
+            print("\(String(describing: self.self)): need provide buttons")
+        }
         return (title != nil || subtitle != nil) && self.buttons.count > 0
     }
     
@@ -112,6 +118,9 @@ public final class PopupAlert: PopupModel {
     
     
     override var isValid: Bool {
+        if buttons.count >= 4 {
+            print("\(String(describing: self.self)): buttons.count >= 4")
+        }
         return super.isValid && buttons.count < 4
     }
     
@@ -133,10 +142,20 @@ public final class PopupActionSheet: PopupModel {
     
     public var cancelButtonTitle: String?
     
-    public var cancelAction: (() -> Void)?
+    public lazy var onCancel: Observable<Void> = {
+        return cancelSubject.asObservable()
+    }()
+    
+    let cancelSubject = PublishSubject<Void>()
     
     override var isValid: Bool {
-        return super.isValid && cancelButtonTitle != nil
+        if cancelButtonTitle == nil {
+            print("\(String(describing: self.self)): need provide cancelButtonTitle")
+        }
+        if title == nil && subtitle == nil {
+            print("\(String(describing: self.self)): need provide title or subtitle")
+        }
+        return (title != nil || subtitle != nil) && cancelButtonTitle != nil
     }
     
     
@@ -145,5 +164,10 @@ public final class PopupActionSheet: PopupModel {
         self.title = title
         self.subtitle = subtitle
         self.cancelButtonTitle = cancelButtonTitle
+    }
+    
+    
+    override func makeController() -> PopupController {
+        return PopupActionSheetController(model: self)
     }
 }
