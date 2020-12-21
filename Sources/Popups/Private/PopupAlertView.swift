@@ -110,6 +110,10 @@ class PopupAlertView: PopupView {
     private func makeTextField(model: PopupAlertTextField, x: CGFloat, y: CGFloat) -> UITextField {
         let frame = CGRect(x: x, y: y, width: bounds.width - x - contentInsets.right, height: textFieldHeight)
         let textField = UITextField(frame: frame)
+        textField.font = PopupConfig.fonts.textfield
+        textField.textColor = PopupConfig.colors.textfieldText
+        textField.text = model.text
+        
         if let placeholder = model.placeholder {
             textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.font: PopupConfig.fonts.textfield, .foregroundColor: PopupConfig.colors.textfieldPlaceholder])
         }

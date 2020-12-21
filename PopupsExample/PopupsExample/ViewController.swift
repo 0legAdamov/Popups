@@ -140,7 +140,8 @@ class ViewController: UIViewController {
         
         alerts.append(Example(text: "Alert with textfield and icon", action: { [unowned self] in
             let alert = PopupAlert(title: "Alert with textfield", subtitle: "Whether the button is enabled depends on whether there is text in the textfield")
-            alert.textField = PopupAlertTextField(placeholder: "Input here...", text: nil, image: UIImage(systemName: "person.crop.circle"))
+            let textfield = PopupAlertTextField(placeholder: "Input here...", text: "Some text", image: UIImage(systemName: "person.crop.circle"))
+            alert.textField = textfield
             
             let cancel = PopupButton(title: "Cancel")
             cancel.boldTitle = true
@@ -153,7 +154,7 @@ class ViewController: UIViewController {
             alert.onDismiss
                 .ignoreElements()
                 .subscribe(onCompleted: {
-                    print("on completed")
+                    print("on completed, text: \(textfield.text ?? "")")
                 }, onDisposed: {
                     print("on disposed")
                 })
